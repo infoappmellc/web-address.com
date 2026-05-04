@@ -1,8 +1,10 @@
 export default {
   async fetch(request) {
     const FALLBACK_BASE = 'https://youtu.be/ldZXyauy9fo?si=NaBsl_kVJDXm2DgU';
-    const DEFAULT_TITLE = 'Drivemaster';
+    const SITE_NAME = 'Drivemaster';
+    const SHARE_TITLE = 'ALL TYPES of Parking in ONE Video! Parallel/Straight/Angle Parking';
     const DESCRIPTION = 'See details here';
+    const SHARE_IMAGE = 'https://img.youtube.com/vi/ldZXyauy9fo/maxres1.jpg';
     const ICON_DATA_URL =
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffffff'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-weight='700' font-size='42' fill='%230050ff'%3Em%3C/text%3E%3C/svg%3E";
 
@@ -19,8 +21,8 @@ export default {
     });
 
     const hasFbclid = searchParams.has('fbclid');
-    const customTitle = decodeTitle(searchParams, requestUrl.search) || DEFAULT_TITLE;
-    const message = customTitle || DESCRIPTION;
+    const shareTitle = decodeTitle(searchParams, requestUrl.search) || SHARE_TITLE;
+    const message = SITE_NAME;
 
     if (hasFbclid) {
       return new Response(null, {
@@ -33,10 +35,14 @@ export default {
     }
 
     const html = renderWaitingHtml({
-      title: customTitle,
+      pageTitle: SITE_NAME,
+      shareTitle,
       description: DESCRIPTION,
+      image: SHARE_IMAGE,
       icon: ICON_DATA_URL,
       message,
+      pageUrl: requestUrl.toString(),
+      siteName: SITE_NAME,
     });
 
     return new Response(html, {
@@ -90,18 +96,32 @@ function escapeHtml(input) {
   });
 }
 
-function renderWaitingHtml({ title, description, icon, message }) {
-  const safeTitle = escapeHtml(title);
+function renderWaitingHtml({ pageTitle, shareTitle, description, image, icon, message, pageUrl, siteName }) {
+  const safePageTitle = escapeHtml(pageTitle);
+  const safeShareTitle = escapeHtml(shareTitle);
   const safeDescription = escapeHtml(description);
+  const safeImage = escapeHtml(image);
   const safeMessage = escapeHtml(message);
+  const safeUrl = escapeHtml(pageUrl);
+  const safeSiteName = escapeHtml(siteName);
 
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>${safeTitle}</title>
+    <title>${safePageTitle}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${safeDescription}">
+    <meta property="og:title" content="${safeShareTitle}">
+    <meta property="og:description" content="${safeDescription}">
+    <meta property="og:image" content="${safeImage}">
+    <meta property="og:url" content="${safeUrl}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="${safeSiteName}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${safeShareTitle}">
+    <meta name="twitter:description" content="${safeDescription}">
+    <meta name="twitter:image" content="${safeImage}">
     <link rel="icon" href="${icon}">
     <style>
       body {

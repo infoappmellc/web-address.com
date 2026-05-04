@@ -10,7 +10,7 @@ const slugifyOptions = { lower: true, strict: true };
 
 const SITE_NAME = 'Drivemaster';
 const DEFAULT_DESCRIPTION = 'See details here';
-const DEFAULT_IMAGE = 'https://www.facebook.com/images/fb_icon_325x325.png';
+const DEFAULT_IMAGE = 'https://img.youtube.com/vi/ldZXyauy9fo/maxres1.jpg';
 
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = '123123123';
