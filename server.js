@@ -218,7 +218,7 @@ app.get('/:slug', async (req, res, next) => {
     return next();
   }
 
-  const fullUrl = `${req.protocol}://${req.get('host')}/${post.slug}`;
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   return res.send(renderPostHtml(post, fullUrl));
 });
 
