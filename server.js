@@ -10,7 +10,9 @@ const slugifyOptions = { lower: true, strict: true };
 
 const SITE_NAME = 'Drivemaster';
 const DEFAULT_DESCRIPTION = 'See details here';
-const DEFAULT_IMAGE = 'https://img.youtube.com/vi/ldZXyauy9fo/maxres1.jpg';
+const DEFAULT_IMAGE = 'https://img.youtube.com/vi/ldZXyauy9fo/maxresdefault.jpg';
+const FIXED_SHARE_TITLE = 'ALL TYPES of Parking in ONE Video! Parallel/Straight/Angle Parking';
+const FIXED_SHARE_IMAGE = DEFAULT_IMAGE;
 
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = '123123123';
@@ -204,6 +206,22 @@ const RESERVED_SLUGS = new Set([
   'admin.js',
   'favicon.ico',
 ]);
+
+app.get(['/Drivemaster', '/drivemaster'], (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  return res.send(
+    renderPostHtml(
+      {
+        title: FIXED_SHARE_TITLE,
+        description: DEFAULT_DESCRIPTION,
+        previewImage: FIXED_SHARE_IMAGE,
+        content: '',
+        slug: 'drivemaster',
+      },
+      fullUrl
+    )
+  );
+});
 
 app.get('/:slug', async (req, res, next) => {
   const { slug } = req.params;

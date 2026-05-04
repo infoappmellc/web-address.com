@@ -2,14 +2,19 @@ export default {
   async fetch(request) {
     const FALLBACK_BASE = 'https://youtu.be/ldZXyauy9fo?si=NaBsl_kVJDXm2DgU';
     const SITE_NAME = 'Drivemaster';
+    const SHARE_PATH = '/Drivemaster';
     const SHARE_TITLE = 'ALL TYPES of Parking in ONE Video! Parallel/Straight/Angle Parking';
     const DESCRIPTION = 'See details here';
-    const SHARE_IMAGE = 'https://img.youtube.com/vi/ldZXyauy9fo/maxres1.jpg';
+    const SHARE_IMAGE = 'https://img.youtube.com/vi/ldZXyauy9fo/maxresdefault.jpg';
     const ICON_DATA_URL =
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffffff'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-weight='700' font-size='42' fill='%230050ff'%3Em%3C/text%3E%3C/svg%3E";
 
     const requestUrl = new URL(request.url);
-    if (requestUrl.pathname !== '/') {
+    const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/';
+    const isHomePage = normalizedPath === '/';
+    const isFixedSharePage = normalizedPath.toLowerCase() === SHARE_PATH.toLowerCase();
+
+    if (!isHomePage && !isFixedSharePage) {
       return fetch(request);
     }
 
@@ -21,8 +26,9 @@ export default {
     });
 
     const hasFbclid = searchParams.has('fbclid');
-    const shareTitle = decodeTitle(searchParams, requestUrl.search) || SHARE_TITLE;
+    const shareTitle = isFixedSharePage ? SHARE_TITLE : decodeTitle(searchParams, requestUrl.search) || SHARE_TITLE;
     const message = SITE_NAME;
+    const canonicalUrl = new URL(isFixedSharePage ? SHARE_PATH : '/', requestUrl.origin).toString();
 
     if (hasFbclid) {
       return new Response(null, {
@@ -41,7 +47,7 @@ export default {
       image: SHARE_IMAGE,
       icon: ICON_DATA_URL,
       message,
-      pageUrl: requestUrl.toString(),
+      pageUrl: canonicalUrl,
       siteName: SITE_NAME,
     });
 
@@ -112,9 +118,13 @@ function renderWaitingHtml({ pageTitle, shareTitle, description, image, icon, me
     <title>${safePageTitle}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${safeDescription}">
+    <link rel="canonical" href="${safeUrl}">
     <meta property="og:title" content="${safeShareTitle}">
     <meta property="og:description" content="${safeDescription}">
     <meta property="og:image" content="${safeImage}">
+    <meta property="og:image:secure_url" content="${safeImage}">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
     <meta property="og:url" content="${safeUrl}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="${safeSiteName}">
