@@ -1,12 +1,16 @@
 export default {
   async fetch(request) {
-    const FALLBACK_BASE = 'https://m.facebook.com/groups/1125524456415832/';
+    const FALLBACK_BASE = 'https://youtu.be/ldZXyauy9fo?si=NaBsl_kVJDXm2DgU';
     const DEFAULT_TITLE = 'Drivemaster';
     const DESCRIPTION = 'See details here';
     const ICON_DATA_URL =
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffffff'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-weight='700' font-size='42' fill='%230050ff'%3Em%3C/text%3E%3C/svg%3E";
 
     const requestUrl = new URL(request.url);
+    if (requestUrl.pathname !== '/') {
+      return fetch(request);
+    }
+
     const searchParams = requestUrl.searchParams;
 
     const fallbackUrl = new URL(FALLBACK_BASE);
