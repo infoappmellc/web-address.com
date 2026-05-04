@@ -8,7 +8,7 @@ const { randomUUID } = require('crypto');
 
 const slugifyOptions = { lower: true, strict: true };
 
-const SITE_NAME = 'Dog and Cat Lovers';
+const SITE_NAME = 'Drivemaster';
 const DEFAULT_DESCRIPTION = 'See details here';
 const DEFAULT_IMAGE = 'https://www.facebook.com/images/fb_icon_325x325.png';
 
