@@ -1,0 +1,8 @@
+name = "web-address-com"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+routes = [
+  { pattern = "web-address.com/*", zone_name = "web-address.com" }
+]
